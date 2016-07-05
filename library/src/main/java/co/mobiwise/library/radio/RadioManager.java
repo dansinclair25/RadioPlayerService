@@ -146,6 +146,7 @@ public class RadioManager implements IRadioManager {
     public void destroy() {
         log("destroy");
         RadioManager.getService().cancelNotifications();
+        RadioManager.getService().destroy();
         disconnect();
     }
 

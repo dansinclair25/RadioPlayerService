@@ -218,6 +218,10 @@ public class RadioPlayerService extends Service implements PlayerCallback {
             mTelephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
     }
 
+    public void destroy() {
+        stopSelf();
+    }
+
     /**
      * Play url if different from previous streaming url.
      *
@@ -255,7 +259,7 @@ public class RadioPlayerService extends Service implements PlayerCallback {
         }
 
     }
-    
+
     @Override
     public void playerStarted() {
         mRadioState = State.PLAYING;
