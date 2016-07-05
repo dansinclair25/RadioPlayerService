@@ -45,7 +45,9 @@ public class RadioManager implements IRadioManager {
      * Service connected/Disconnected lock
      */
     private boolean isServiceConnected;
-    
+
+    private boolean enableNotifications = false;
+
     /**
      * Private constructor because of Singleton pattern
      * @param mContext
@@ -76,7 +78,7 @@ public class RadioManager implements IRadioManager {
     }
 
     public void setEnableNotifications(boolean enable) {
-        RadioManager.getService().setEnableNotifications(enable);
+        enableNotifications = enable;
     }
 
     /**
@@ -202,6 +204,7 @@ public class RadioManager implements IRadioManager {
             mService = ((RadioPlayerService.LocalBinder) binder).getService();
             mService.setLogging(isLogging);
             isServiceConnected = true;
+            mService.setEnableNotifications(enableNotifications);
 
             if (!mRadioListenerQueue.isEmpty()) {
                 for (RadioListener mRadioListener : mRadioListenerQueue) {
