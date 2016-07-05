@@ -42,6 +42,7 @@ public class RadioActivity extends Activity implements RadioListener{
                 if (!mRadioManager.isPlaying())
                     mRadioManager.startRadio(RADIO_URL[0]);
                 else
+                    RadioManager.getService().setCloseNotificationOnStop(true);
                     mRadioManager.stopRadio();
             }
         });
