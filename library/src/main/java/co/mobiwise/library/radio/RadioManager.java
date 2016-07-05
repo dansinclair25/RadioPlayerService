@@ -143,6 +143,12 @@ public class RadioManager implements IRadioManager {
         mContext.bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
+    public void destroy() {
+        log("destroy");
+        RadioManager.getService().cancelNotifications();
+        disconnect();
+    }
+
     /**
      * Disconnect radio player service
      */
