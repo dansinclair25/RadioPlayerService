@@ -61,8 +61,8 @@ public class RadioPlayerService extends Service implements PlayerCallback {
     /**
      * Radio buffer and decode capacity(DEFAULT VALUES)
      */
-    private final int AUDIO_BUFFER_CAPACITY_MS = 800;
-    private final int AUDIO_DECODE_CAPACITY_MS = 400;
+    private final int AUDIO_BUFFER_CAPACITY_MS = 2000;
+    private final int AUDIO_DECODE_CAPACITY_MS = 1000;
 
     /**
      * Stream url suffix
@@ -327,7 +327,7 @@ public class RadioPlayerService extends Service implements PlayerCallback {
         mRadioPlayer = null;
         getPlayer();
         notifyErrorOccured();
-        log("ERROR OCCURED.");
+        log("ERROR OCCURED: " + throwable.getCause());
     }
 
     @Override
