@@ -45,7 +45,7 @@ public class RadioManager implements IRadioManager {
      * Service connected/Disconnected lock
      */
     private boolean isServiceConnected;
-
+    
     /**
      * Private constructor because of Singleton pattern
      * @param mContext
@@ -73,6 +73,10 @@ public class RadioManager implements IRadioManager {
      */
     public static RadioPlayerService getService(){
         return mService;
+    }
+
+    public void setEnableNotifications(boolean enable) {
+        RadioManager.getService().setEnableNotifications(enable);
     }
 
     /**
