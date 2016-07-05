@@ -122,6 +122,11 @@ public class RadioPlayerService extends Service implements PlayerCallback {
     private boolean isClosedFromNotification = false;
 
     /**
+     * Used to close the notification on stop()
+     */
+    private boolean closeNotificationOnStop = false;
+
+    /**
      * Incoming calls interrupt radio if it is playing.
      * Check if this is true or not after hang up;
      */
@@ -253,8 +258,15 @@ public class RadioPlayerService extends Service implements PlayerCallback {
             mLock = true;
             getPlayer().stop();
         }
+
+        if (mNotificationManager != null && closeNotificationOnStop)
+            mNotificationManager.cancel(NOTIFICATION_ID);
     }
 
+    public void setCloseNotificationOnStop(boolean close) {
+        closeNotificationOnStop = close;
+    }
+    
     @Override
     public void playerStarted() {
         mRadioState = State.PLAYING;
