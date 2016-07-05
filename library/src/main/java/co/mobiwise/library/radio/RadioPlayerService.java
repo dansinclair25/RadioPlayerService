@@ -259,14 +259,12 @@ public class RadioPlayerService extends Service implements PlayerCallback {
             getPlayer().stop();
         }
 
-        if (mNotificationManager != null && closeNotificationOnStop)
-            mNotificationManager.cancel(NOTIFICATION_ID);
     }
 
     public void setCloseNotificationOnStop(boolean close) {
         closeNotificationOnStop = close;
     }
-    
+
     @Override
     public void playerStarted() {
         mRadioState = State.PLAYING;
@@ -301,10 +299,13 @@ public class RadioPlayerService extends Service implements PlayerCallback {
          * If player stopped from notification then dont
          * call buildNotification().
          */
-        if (!isClosedFromNotification)
+        if (!isClosedFromNotification && !closeNotificationOnStop)
             buildNotification();
         else
             isClosedFromNotification = false;
+            if (mNotificationManager != null && closeNotificationOnStop) {
+                mNotificationManager.cancel(NOTIFICATION_ID);
+            }
 
         mLock = false;
         notifyRadioStopped();
