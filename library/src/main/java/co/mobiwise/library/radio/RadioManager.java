@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
+import android.media.AudioTrack;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -18,7 +19,7 @@ import java.util.TimerTask;
 /**
  * Created by mertsimsek on 03/07/15.
  */
-public class RadioManager implements IRadioManager {
+public class RadioManager implements IRadioManager, RadioPlayerServiceListener {
 
     /**
      * Logging enable/disable
@@ -58,6 +59,8 @@ public class RadioManager implements IRadioManager {
     private float volumeIncrement = (float)0.1;
 
     private float mVolume = (float)0.0;
+
+    private AudioTrack mAudioTrack;
 
     private Handler fadeHandler;
 
@@ -142,6 +145,15 @@ public class RadioManager implements IRadioManager {
         }
     };
 
+    @Override
+    public void onAudioTrackCreated(AudioTrack audioTrack) {
+        mAudioTrack = audioTrack;
+        if (shouldFade && Build.VERSION.SDK_INT >= 21) {
+            mAudioTrack.setVolume((float)0.0);
+            fadeInRunnable.run();
+        }
+    }
+
     /**
      * Start Radio Streaming
      * @param streamURL
@@ -150,13 +162,8 @@ public class RadioManager implements IRadioManager {
     public void startRadio(String streamURL) {
         mStreamURL = streamURL;
 
-        if (shouldFade && Build.VERSION.SDK_INT >= 21) {
+        mService.play(mStreamURL);
 
-            fadeInRunnable.run();
-
-        } else {
-            mService.play(mStreamURL);
-        }
     }
 
 

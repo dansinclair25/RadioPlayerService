@@ -82,6 +82,8 @@ public class RadioPlayerService extends Service implements PlayerCallback {
 
     List<RadioListener> mListenerList;
 
+    List<RadioPlayerServiceListener> mRadioServiceListenerList;
+
     /**
      * Radio State
      */
@@ -342,7 +344,9 @@ public class RadioPlayerService extends Service implements PlayerCallback {
     public void playerAudioTrackCreated(AudioTrack audioTrack) {
         //Empty
         log("playerAudioTrackCreated");
-        mAudioTrack = audioTrack;
+        for (RadioPlayerServiceListener mServiceListener : mRadioServiceListenerList) {
+            mServiceListener.onAudioTrackCreated(audioTrack);
+        }
     }
 
     public void registerListener(RadioListener mListener) {
