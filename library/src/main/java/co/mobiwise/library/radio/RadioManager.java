@@ -149,7 +149,7 @@ public class RadioManager implements IRadioManager, RadioPlayerServiceListener {
     public void onAudioTrackCreated(AudioTrack audioTrack) {
         mAudioTrack = audioTrack;
         log("onAudioTrackCreated: " + mAudioTrack);
-        if (shouldFade && Build.VERSION.SDK_INT >= 21 && mService.isPlaying()) {
+        if (shouldFade && Build.VERSION.SDK_INT >= 21 && mAudioTrack != null && mService.isPlaying()) {
             mAudioTrack.setVolume((float)0.0);
             fadeInRunnable.run();
         }
