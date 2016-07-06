@@ -341,6 +341,7 @@ public class RadioPlayerService extends Service implements PlayerCallback {
     @Override
     public void playerAudioTrackCreated(AudioTrack audioTrack) {
         //Empty
+        log("playerAudioTrackCreated");
         mAudioTrack = audioTrack;
     }
 
