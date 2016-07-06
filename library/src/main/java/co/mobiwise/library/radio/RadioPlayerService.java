@@ -142,6 +142,9 @@ public class RadioPlayerService extends Service implements PlayerCallback {
      */
     private NotificationManager mNotificationManager;
 
+
+    public AudioTrack mAudioTrack;
+
     /**
      * Binder
      */
@@ -338,6 +341,7 @@ public class RadioPlayerService extends Service implements PlayerCallback {
     @Override
     public void playerAudioTrackCreated(AudioTrack audioTrack) {
         //Empty
+        mAudioTrack = audioTrack;
     }
 
     public void registerListener(RadioListener mListener) {
