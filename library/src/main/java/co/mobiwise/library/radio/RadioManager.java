@@ -108,7 +108,7 @@ public class RadioManager implements IRadioManager, RadioPlayerServiceListener {
     public void setVolume(float volume) {
         if (Build.VERSION.SDK_INT >= 21) {
             mVolume = volume;
-            mService.mAudioTrack.setVolume(mVolume);
+            mAudioTrack.setVolume(mVolume);
         }
     }
 
