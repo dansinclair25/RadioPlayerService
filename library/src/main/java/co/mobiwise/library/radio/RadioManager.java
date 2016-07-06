@@ -98,6 +98,10 @@ public class RadioManager implements IRadioManager {
         enableNotifications = enable;
     }
 
+    public void setShouldFade(boolean fade) {
+        shouldFade = fade;
+    }
+
     public void setVolume(float volume) {
         if (Build.VERSION.SDK_INT >= 21) {
             mVolume = volume;
