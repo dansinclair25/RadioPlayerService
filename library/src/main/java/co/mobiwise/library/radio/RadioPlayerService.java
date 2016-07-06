@@ -343,9 +343,11 @@ public class RadioPlayerService extends Service implements PlayerCallback {
     @Override
     public void playerAudioTrackCreated(AudioTrack audioTrack) {
         //Empty
-        log("playerAudioTrackCreated");
-        for (RadioPlayerServiceListener mServiceListener : mRadioServiceListenerList) {
-            mServiceListener.onAudioTrackCreated(audioTrack);
+        log("playerAudioTrackCreated: " + audioTrack);
+        if (audioTrack != null) {
+            for (RadioPlayerServiceListener mServiceListener : mRadioServiceListenerList) {
+                mServiceListener.onAudioTrackCreated(audioTrack);
+            }
         }
     }
 
