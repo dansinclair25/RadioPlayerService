@@ -351,6 +351,9 @@ public class RadioPlayerService extends Service implements PlayerCallback {
         }
     }
 
+    public void registerServiceListener(RadioPlayerServiceListener mListener) { mRadioServiceListenerList.add(mListener); }
+    public void unregisterServiceListener(RadioPlayerServiceListener mListener) { mRadioServiceListenerList.remove(mListener); }
+
     public void registerListener(RadioListener mListener) {
         mListenerList.add(mListener);
     }

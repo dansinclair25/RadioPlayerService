@@ -289,6 +289,7 @@ public class RadioManager implements IRadioManager, RadioPlayerServiceListener {
             mService.setLogging(isLogging);
             isServiceConnected = true;
             mService.setEnableNotifications(enableNotifications);
+            mService.registerServiceListener(RadioManager.this);
 
             if (!mRadioListenerQueue.isEmpty()) {
                 for (RadioListener mRadioListener : mRadioListenerQueue) {
