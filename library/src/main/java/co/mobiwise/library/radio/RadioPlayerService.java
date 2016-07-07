@@ -61,8 +61,8 @@ public class RadioPlayerService extends Service implements PlayerCallback {
     /**
      * Radio buffer and decode capacity(DEFAULT VALUES)
      */
-    private final int AUDIO_BUFFER_CAPACITY_MS = 800;
-    private final int AUDIO_DECODE_CAPACITY_MS = 400;
+    private final int AUDIO_BUFFER_CAPACITY_MS = 2000;
+    private final int AUDIO_DECODE_CAPACITY_MS = 1000;
 
     /**
      * Stream url suffix
@@ -81,8 +81,6 @@ public class RadioPlayerService extends Service implements PlayerCallback {
     }
 
     List<RadioListener> mListenerList;
-
-    List<RadioPlayerServiceListener> mRadioServiceListenerList;
 
     /**
      * Radio State
@@ -143,9 +141,6 @@ public class RadioPlayerService extends Service implements PlayerCallback {
      * Notification manager
      */
     private NotificationManager mNotificationManager;
-
-
-    public AudioTrack mAudioTrack;
 
     /**
      * Binder
@@ -343,16 +338,7 @@ public class RadioPlayerService extends Service implements PlayerCallback {
     @Override
     public void playerAudioTrackCreated(AudioTrack audioTrack) {
         //Empty
-        log("playerAudioTrackCreated: " + audioTrack);
-        if (audioTrack != null) {
-            for (RadioPlayerServiceListener mServiceListener : mRadioServiceListenerList) {
-                mServiceListener.onAudioTrackCreated(audioTrack);
-            }
-        }
     }
-
-    public void registerServiceListener(RadioPlayerServiceListener mListener) { mRadioServiceListenerList.add(mListener); }
-    public void unregisterServiceListener(RadioPlayerServiceListener mListener) { mRadioServiceListenerList.remove(mListener); }
 
     public void registerListener(RadioListener mListener) {
         mListenerList.add(mListener);
