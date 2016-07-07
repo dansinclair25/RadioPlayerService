@@ -5,16 +5,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
+import android.media.AudioTrack;
+import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by mertsimsek on 03/07/15.
  */
-public class RadioManager implements IRadioManager {
+public class RadioManager implements IRadioManager, RadioPlayerServiceListener {
 
     /**
      * Logging enable/disable
@@ -48,6 +53,19 @@ public class RadioManager implements IRadioManager {
 
     private boolean enableNotifications = false;
 
+    private boolean shouldFade = false;
+
+    private float fadeDuration = (float)1.0;
+    private float volumeIncrement = (float)0.1;
+
+    private float mVolume = (float)0.0;
+
+    private AudioTrack mAudioTrack;
+
+    private Handler fadeHandler;
+
+    private String mStreamURL;
+
     /**
      * Private constructor because of Singleton pattern
      * @param mContext
@@ -56,6 +74,8 @@ public class RadioManager implements IRadioManager {
         this.mContext = mContext;
         mRadioListenerQueue = new ArrayList<>();
         isServiceConnected = false;
+        fadeHandler = new Handler();
+
     }
 
     /**
@@ -81,21 +101,85 @@ public class RadioManager implements IRadioManager {
         enableNotifications = enable;
     }
 
+    public void setShouldFade(boolean fade) {
+        shouldFade = fade;
+    }
+
+    public void setVolume(float volume) {
+        if (Build.VERSION.SDK_INT >= 21) {
+            mVolume = volume;
+            mAudioTrack.setVolume(mVolume);
+        }
+    }
+
+    public float getVolume() {
+        if (Build.VERSION.SDK_INT >= 21) {
+            return mVolume;
+        }
+        return (float)1.0;
+    }
+
+    Runnable fadeInRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mVolume < (float)1.0) {
+                setVolume(mVolume + volumeIncrement);
+                long delay = (long) (fadeDuration * volumeIncrement);
+                fadeHandler.postDelayed(this, delay);
+            } else {
+                mService.play(mStreamURL);
+            }
+        }
+    };
+
+    Runnable fadeOutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mVolume >= (float)0.0) {
+                setVolume(mVolume - volumeIncrement);
+                long delay = (long) (fadeDuration * volumeIncrement);
+                fadeHandler.postDelayed(this, delay);
+            } else {
+                mService.stop();
+            }
+        }
+    };
+
+    @Override
+    public void onAudioTrackCreated(AudioTrack audioTrack) {
+        mAudioTrack = audioTrack;
+        log("onAudioTrackCreated: " + mAudioTrack);
+        if (shouldFade && Build.VERSION.SDK_INT >= 21 && mAudioTrack != null && mService.isPlaying()) {
+            mAudioTrack.setVolume((float)0.0);
+            fadeInRunnable.run();
+        }
+    }
+
     /**
      * Start Radio Streaming
      * @param streamURL
      */
     @Override
     public void startRadio(String streamURL) {
-        mService.play(streamURL);
+        mStreamURL = streamURL;
+
+        mService.play(mStreamURL);
+
     }
+
 
     /**
      * Stop Radio Streaming
      */
     @Override
     public void stopRadio() {
-        mService.stop();
+        if (shouldFade && Build.VERSION.SDK_INT >= 21) {
+
+            fadeOutRunnable.run();
+
+        } else {
+            mService.stop();
+        }
     }
 
     /**
@@ -205,6 +289,7 @@ public class RadioManager implements IRadioManager {
             mService.setLogging(isLogging);
             isServiceConnected = true;
             mService.setEnableNotifications(enableNotifications);
+            mService.registerServiceListener(RadioManager.this);
 
             if (!mRadioListenerQueue.isEmpty()) {
                 for (RadioListener mRadioListener : mRadioListenerQueue) {
