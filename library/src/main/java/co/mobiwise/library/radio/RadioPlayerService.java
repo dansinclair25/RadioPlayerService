@@ -17,7 +17,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.spoledge.aacdecoder.MultiPlayer;
+import com.spoledge.aacdecoder.MP3Player;
 import com.spoledge.aacdecoder.PlayerCallback;
 
 import java.util.ArrayList;
@@ -101,7 +101,7 @@ public class RadioPlayerService extends Service implements PlayerCallback {
     /**
      * AAC Radio Player
      */
-    private MultiPlayer mRadioPlayer;
+    private MP3Player mRadioPlayer;
 
     /**
      * Will be controlled on incoming calls and stop and start player.
@@ -380,9 +380,9 @@ public class RadioPlayerService extends Service implements PlayerCallback {
     /**
      * Return AAC player. If it is not initialized, creates and returns.
      *
-     * @return MultiPlayer
+     * @return MP3Player
      */
-    private MultiPlayer getPlayer() {
+    private MP3Player getPlayer() {
         try {
 
             java.net.URL.setURLStreamHandlerFactory(new java.net.URLStreamHandlerFactory() {
@@ -399,7 +399,7 @@ public class RadioPlayerService extends Service implements PlayerCallback {
         }
 
         if (mRadioPlayer == null) {
-            mRadioPlayer = new MultiPlayer(this, AUDIO_BUFFER_CAPACITY_MS, AUDIO_DECODE_CAPACITY_MS);
+            mRadioPlayer = new MP3Player(this, AUDIO_BUFFER_CAPACITY_MS, AUDIO_DECODE_CAPACITY_MS);
             mRadioPlayer.setResponseCodeCheckEnabled(false);
             mRadioPlayer.setPlayerCallback(this);
         }
